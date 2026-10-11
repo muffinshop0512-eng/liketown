@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Like Town - ระบบจัดคิวหมอ EMS Doctor Queue</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#ff7a00',
+              'orange-dark': '#e65100',
+              purple: '#9333ea',
+              dark: '#0a0910',
+              card: 'rgba(20, 18, 30, 0.75)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts: Kanit & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="selection:bg-orange-500 selection:text-white">
+
+  <!-- Background Watermark Logo with Faded Opacity -->
+  <div class="bg-watermark"></div>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Main Container -->
+  <div class="relative z-10 min-h-screen flex flex-col justify-between max-w-7xl mx-auto px-4 py-5 sm:px-6 lg:px-8">
+
+    <!-- HEADER SECTION -->
+    <header class="glass-panel p-4 sm:p-6 mb-6 rounded-3xl border border-orange-500/25 shadow-2xl">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <!-- Brand & Title -->
+        <div class="flex items-center gap-4 text-center md:text-left">
+          <div class="relative group cursor-pointer">
+            <div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-purple-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+            <img src="assets/logo.png" alt="Like Town Logo" class="relative w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-xl p-1 bg-black/60 shadow-xl">
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2 justify-center md:justify-start">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30 tracking-wider uppercase">
+                EMS LIKE TOWN SERVER
+              </span>
+              <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> ระบบออนไลน์
+              </span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-purple-300 tracking-tight mt-0.5">
+              ระบบจัดคิวแพทย์ LIKE TOWN
+            </h1>
+            <p class="text-xs sm:text-sm text-gray-400 font-light">
+              จัดการลำดับคิวรับเคส • จัดสรรเวรหมอ • สแตนด์บาย • แจ้งเตือนพักเหม่อ 15 นาที
+            </p>
+          </div>
+        </div>
+
+        <!-- Top Right Main Action Controls -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 w-full md:w-auto">
+          <!-- Fast Call Next Button -->
+          <button id="btn-call-next" 
+                  class="btn-neon-orange px-5 py-3 rounded-2xl flex items-center gap-2.5 text-sm sm:text-base font-bold shadow-lg transition-all active:scale-95">
+            <i class="fa-solid fa-bullhorn text-lg animate-bounce"></i>
+            <span>เรียกเคสถัดไป</span>
+          </button>
+
+          <!-- Add Doctor Button -->
+          <button onclick="openAddDoctorModal()" 
+                  class="px-4 py-2.5 rounded-2xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 text-sm font-semibold flex items-center gap-2 transition shadow">
+            <i class="fa-solid fa-user-plus text-purple-400"></i>
+            <span>เพิ่มคุณหมอ</span>
+          </button>
+
+          <!-- Manage Ranks Button -->
+          <button onclick="openRankModal()" 
+                  class="px-3.5 py-2.5 rounded-2xl bg-gray-800/60 hover:bg-gray-800 text-gray-300 border border-white/10 text-sm font-medium flex items-center gap-2 transition">
+            <i class="fa-solid fa-medal text-amber-400"></i>
+            <span>จัดการยศ</span>
+          </button>
+
+          <!-- Sound Toggle Button -->
+          <button id="btn-sound-toggle" 
+                  class="px-3.5 py-2.5 rounded-2xl bg-black/40 hover:bg-black/60 text-gray-300 border border-gray-700 text-xs font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-volume-high text-orange-400"></i>
+            <span>เสียงเปิด</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- STATUS SUMMARY CARDS -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-5 pt-5 border-t border-white/10">
+        
+        <!-- Total Doctors -->
+        <div class="p-3 rounded-2xl bg-black/30 border border-white/5 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-gray-400">
+            <span>หมอทั้งหมด</span>
+            <i class="fa-solid fa-user-doctor text-orange-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-black text-white font-mono" id="stat-total-docs">0</div>
+        </div>
+
+        <!-- Waiting Next -->
+        <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-amber-300">
+            <span>รอเคสถัดไป</span>
+            <i class="fa-solid fa-user-clock text-amber-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-black text-amber-300 font-mono" id="stat-next-docs">0</div>
+        </div>
+
+        <!-- In Progress / Busy -->
+        <div class="p-3 rounded-2xl bg-red-500/10 border border-red-500/30 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-red-300">
+            <span>กำลังทำเคส</span>
+            <i class="fa-solid fa-heart-pulse text-red-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-black text-red-400 font-mono" id="stat-busy-docs">0</div>
+        </div>
+
+        <!-- In Queue -->
+        <div class="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-purple-300">
+            <span>ยังไม่ถึงเคส</span>
+            <i class="fa-solid fa-users text-purple-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-black text-purple-300 font-mono" id="stat-queue-docs">0</div>
+        </div>
+
+        <!-- AFK / Break (15 Mins) -->
+        <div class="p-3 rounded-2xl bg-amber-600/10 border border-amber-600/30 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-yellow-300">
+            <span>พัก/เหม่อ (15น.)</span>
+            <i class="fa-solid fa-mug-hot text-yellow-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-black text-yellow-300 font-mono" id="stat-afk-docs">0</div>
+        </div>
+
+        <!-- Total Completed Cases -->
+        <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-emerald-300">
+            <span>เคสสะสม</span>
+            <i class="fa-solid fa-trophy text-emerald-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-black text-emerald-400 font-mono" id="stat-total-cases">0</div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- CONTROLS & FILTER BAR -->
+    <div class="glass-panel p-3.5 mb-6 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-white/10">
+      
+      <!-- Search & Rank Filter -->
+      <div class="flex flex-wrap items-center gap-2.5 flex-1 min-w-[280px]">
+        <div class="relative flex-1 min-w-[200px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+          <input type="text" 
+                 id="search-doctor-input" 
+                 placeholder="ค้นหาชื่อคุณหมอ / รหัส..." 
+                 class="w-full bg-black/40 border border-white/10 rounded-xl pl-9 pr-3.5 py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/60">
+        </div>
+
+        <select id="filter-rank-select" 
+                class="bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs sm:text-sm text-gray-300 focus:outline-none focus:border-orange-500/60 cursor-pointer">
+          <option value="all">ทุกยศตำแหน่ง</option>
+        </select>
+      </div>
+
+      <!-- View Switcher Tabs & Tools -->
+      <div class="flex items-center gap-2">
+        <div class="flex p-1 bg-black/40 rounded-xl border border-white/10">
+          <button id="tab-queue-view" class="tab-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-list-ol"></i>
+            <span>จัดลำดับคิว</span>
+          </button>
+          <button id="tab-board-view" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition flex items-center gap-1.5">
+            <i class="fa-solid fa-table-columns"></i>
+            <span>กระดานสถานะ</span>
+          </button>
+        </div>
+
+        <!-- Export & Reset Menu -->
+        <button onclick="exportData()" title="สำรองข้อมูล JSON" class="p-2 bg-black/40 hover:bg-black/70 border border-white/10 rounded-xl text-gray-400 hover:text-white transition text-xs">
+          <i class="fa-solid fa-file-export"></i>
+        </button>
+        <button onclick="triggerImport()" title="นำเข้าข้อมูล JSON" class="p-2 bg-black/40 hover:bg-black/70 border border-white/10 rounded-xl text-gray-400 hover:text-white transition text-xs">
+          <i class="fa-solid fa-file-import"></i>
+        </button>
+        <button id="btn-reset-data" title="รีเซ็ตค่าเริ่มต้น" class="p-2 bg-black/40 hover:bg-red-500/20 border border-white/10 rounded-xl text-gray-400 hover:text-red-400 transition text-xs">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="handleFileImport(event)">
+      </div>
+
+    </div>
+
+    <!-- MAIN WORKSPACE CONTENT -->
+    <main class="flex-1">
+      <!-- 1. Queue View Mode (Default) -->
+      <div id="queue-list-container">
+        <!-- Rows dynamically injected via JS -->
+      </div>
+
+      <!-- 2. Board / Kanban View Mode -->
+      <div id="board-view-container" class="hidden">
+        <!-- 5 Columns dynamically injected via JS -->
+      </div>
+    </main>
+
+    <!-- RECENT ACTIVITY LOGS -->
+    <div class="glass-panel p-4 mt-6 rounded-2xl border border-white/10">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+          <i class="fa-solid fa-clock-rotate-left text-orange-400"></i> บันทึกความเคลื่อนไหวล่าสุด
+        </h3>
+        <span class="text-[11px] text-gray-500">อัปเดตอัตโนมัติ</span>
+      </div>
+      <div id="activity-logs" class="max-h-24 overflow-y-auto pr-2 space-y-1">
+        <!-- Log rows -->
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-6 pt-4 border-t border-white/5 text-center text-xs text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        Like Town RP &copy; 2026 • ระบบจัดคิวแพทย์ EMS Community
+      </div>
+      <div class="flex items-center gap-3 text-gray-400">
+        <span><i class="fa-solid fa-shield-cat text-orange-500 mr-1"></i>ระบบเซฟอัตโนมัติ</span>
+        <span>•</span>
+        <span><i class="fa-solid fa-bell text-purple-400 mr-1"></i>จับเวลาพัก 15 นาที</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Modal 1: Add / Edit Doctor -->
+  <div id="modal-doctor" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 modal-overlay">
+    <div class="glass-panel-elevated w-full max-w-md p-6 rounded-3xl relative modal-content">
+      <button onclick="closeModal('modal-doctor')" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg border border-orange-500/30">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <div>
+          <h3 id="modal-doctor-title" class="text-lg font-bold text-white">เพิ่มคุณหมอใหม่</h3>
+          <p class="text-xs text-gray-400">กรอกรายละเอียดเพื่อจัดเข้าคิวแพทย์ Like Town</p>
+        </div>
+      </div>
+
+      <form id="form-doctor" class="space-y-4">
+        <input type="hidden" id="doctor-id-input">
+
+        <!-- Doctor Name -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">ชื่อคุณหมอ *</label>
+          <input type="text" id="doctor-name-input" required placeholder="เช่น หมอพอร์ช, หมอน้ำหวาน" 
+                 class="w-full bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
+        </div>
+
+        <!-- Doctor Code / Callsign -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">รหัส / Callsign (ถ้ามี)</label>
+          <input type="text" id="doctor-code-input" placeholder="เช่น DOC-01, EMS-07" 
+                 class="w-full bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
+        </div>
+
+        <!-- Rank Dropdown -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-semibold text-gray-300">ยศ / ตำแหน่ง *</label>
+            <button type="button" onclick="closeModal('modal-doctor'); openRankModal();" class="text-[11px] text-orange-400 hover:underline">
+              + สร้างยศใหม่
+            </button>
+          </div>
+          <select id="doctor-rank-input" required
+                  class="w-full bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
+            <!-- Rank options -->
+          </select>
+        </div>
+
+        <!-- Initial Status -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">สถานะเริ่มต้น</label>
+          <select id="doctor-status-input" 
+                  class="w-full bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
+            <option value="queue">🟣 ยังไม่ถึงเคส (ต่อคิว)</option>
+            <option value="next">🟡 รอเคสถัดไป (คิวแรก)</option>
+            <option value="busy">🔴 กำลังทำเคส (กำลังรักษา)</option>
+            <option value="none">⚪ ยังไม่มีเคส (สแตนด์บาย)</option>
+            <option value="afk">☕ พัก/เหม่อไม่เกิน 15 นาที</option>
+          </select>
+        </div>
+
+        <!-- Initial Case Count -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">จำนวนเคสที่ทำแล้ว</label>
+          <input type="number" id="doctor-cases-input" min="0" value="0" 
+                 class="w-full bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">หมายเหตุ (ถ้ามี)</label>
+          <input type="text" id="doctor-notes-input" placeholder="เช่น เข้าเวรดึก, ประจำรถพยาบาล 1" 
+                 class="w-full bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-end gap-2.5 pt-3 border-t border-white/10">
+          <button type="button" onclick="closeModal('modal-doctor')" class="px-4 py-2.5 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700 text-xs font-semibold transition">
+            ยกเลิก
+          </button>
+          <button type="submit" class="btn-neon-orange px-5 py-2.5 rounded-xl text-xs font-bold transition">
+            บันทึกข้อมูล
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Manage & Create Ranks -->
+  <div id="modal-ranks" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 modal-overlay">
+    <div class="glass-panel-elevated w-full max-w-lg p-6 rounded-3xl relative modal-content">
+      <button onclick="closeModal('modal-ranks')" class="absolute top-5 right-5 text-gray-400 hover:text-white p-1">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg border border-purple-500/30">
+          <i class="fa-solid fa-medal"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">จัดการยศและตำแหน่งแพทย์</h3>
+          <p class="text-xs text-gray-400">สร้างยศใหม่ กำหนดสีป้าย และปรับแต่งตำแหน่งในโรงพยาบาล</p>
+        </div>
+      </div>
+
+      <!-- Add New Rank Form -->
+      <form id="form-add-rank" class="p-3.5 rounded-2xl bg-black/50 border border-orange-500/30 mb-5 flex flex-wrap sm:flex-nowrap items-end gap-3">
+        <div class="flex-1 min-w-[160px]">
+          <label class="block text-xs font-semibold text-gray-300 mb-1">ชื่อยศ / ตำแหน่งใหม่ *</label>
+          <input type="text" id="new-rank-name" required placeholder="เช่น นายแพทย์ใหญ่, พยาบาลพิเศษ" 
+                 class="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500">
+        </div>
+
+        <div class="w-24">
+          <label class="block text-xs font-semibold text-gray-300 mb-1">สีประจำยศ</label>
+          <div class="flex items-center gap-1.5 bg-black/60 border border-white/10 rounded-xl px-2 py-1">
+            <input type="color" id="new-rank-color" value="#ff7a00" class="w-7 h-7 rounded cursor-pointer bg-transparent border-0">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-neon-orange px-4 py-2 rounded-xl text-xs font-bold shrink-0">
+          + เพิ่มยศ
+        </button>
+      </form>
+
+      <!-- Existing Ranks List -->
+      <div class="mb-4">
+        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">ยศตำแหน่งที่มีอยู่ในระบบ</h4>
+        <div id="ranks-list-container" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+          <!-- Ranks injected via JS -->
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-3 border-t border-white/10">
+        <button onclick="closeModal('modal-ranks')" class="btn-neon-purple px-5 py-2.5 rounded-xl text-xs font-bold">
+          เสร็จสิ้น
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

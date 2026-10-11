@@ -1,0 +1,293 @@
+/* Like Town Doctor Queue System - Custom Styles */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&family=Prompt:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-orange: #ff7a00;
+  --primary-orange-glow: rgba(255, 122, 0, 0.45);
+  --primary-purple: #9333ea;
+  --primary-purple-glow: rgba(147, 51, 234, 0.4);
+  --dark-bg: #09080e;
+  --card-bg: rgba(20, 18, 30, 0.78);
+  --card-border: rgba(255, 122, 0, 0.18);
+  --card-hover: rgba(28, 25, 42, 0.9);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Prompt', 'Kanit', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: var(--dark-bg);
+  color: #f1f5f9;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background watermark styling with logo */
+.bg-watermark {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bg-watermark::before {
+  content: '';
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  max-width: 85vw;
+  max-height: 85vh;
+  background-image: url('assets/logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.085;
+  filter: drop-shadow(0 0 70px rgba(255, 122, 0, 0.35)) saturate(1.2);
+  transform: rotate(-3deg);
+  transition: opacity 0.5s ease;
+  animation: subtleFloat 16s ease-in-out infinite alternate;
+}
+
+@keyframes subtleFloat {
+  0% { transform: translateY(0px) rotate(-3deg) scale(1); }
+  50% { transform: translateY(-12px) rotate(-1deg) scale(1.02); }
+  100% { transform: translateY(10px) rotate(-4deg) scale(0.99); }
+}
+
+/* Ambient glow orbs in background */
+.ambient-glow-1 {
+  position: fixed;
+  top: -150px;
+  right: -100px;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(255, 122, 0, 0.14) 0%, rgba(0,0,0,0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow-2 {
+  position: fixed;
+  bottom: -150px;
+  left: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, rgba(0,0,0,0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glassmorphism card */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  border-radius: 16px;
+}
+
+.glass-panel-elevated {
+  background: rgba(26, 23, 38, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 122, 0, 0.28);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 122, 0, 0.08);
+  border-radius: 20px;
+}
+
+/* Neon buttons */
+.btn-neon-orange {
+  background: linear-gradient(135deg, #ff7a00, #ff4500);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(255, 122, 0, 0.45);
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.btn-neon-orange:hover {
+  background: linear-gradient(135deg, #ff8c1a, #ff5722);
+  box-shadow: 0 6px 24px rgba(255, 122, 0, 0.65);
+  transform: translateY(-2px);
+}
+.btn-neon-orange:active {
+  transform: translateY(0);
+}
+
+.btn-neon-purple {
+  background: linear-gradient(135deg, #a855f7, #7e22ce);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(168, 85, 247, 0.4);
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.btn-neon-purple:hover {
+  background: linear-gradient(135deg, #b86bfc, #8b28e0);
+  box-shadow: 0 6px 24px rgba(168, 85, 247, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Status colors and glowing badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Status 1: รอเคสถัดไป (Gold/Orange neon pulse) */
+.status-next {
+  background: rgba(255, 153, 0, 0.15);
+  color: #ffb833;
+  border: 1px solid rgba(255, 184, 51, 0.5);
+  box-shadow: 0 0 12px rgba(255, 184, 51, 0.25);
+}
+.status-next-card {
+  border-color: rgba(255, 174, 0, 0.5) !important;
+  background: linear-gradient(135deg, rgba(255, 160, 0, 0.08), rgba(20, 18, 30, 0.9)) !important;
+  box-shadow: 0 0 20px rgba(255, 160, 0, 0.18) !important;
+}
+
+/* Status 2: กำลังทำเคส (Crimson/Red flame pulse) */
+.status-busy {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+.status-busy-card {
+  border-color: rgba(239, 68, 68, 0.55) !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(20, 18, 30, 0.9)) !important;
+  box-shadow: 0 0 22px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* Status 3: ยังไม่ถึงเคส (Purple/Blue queue) */
+.status-queue {
+  background: rgba(147, 51, 234, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(192, 132, 252, 0.4);
+}
+
+/* Status 4: ยังไม่มีเคส (Muted cool gray) */
+.status-none {
+  background: rgba(100, 116, 139, 0.16);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+/* Status 5: พัก/เหม่อไม่เกิน15นาที (Amber Warning with countdown) */
+.status-afk {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+}
+.status-afk-card {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(20, 18, 30, 0.9)) !important;
+}
+
+.status-afk-overtime {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #fca5a5 !important;
+  border-color: rgba(239, 68, 68, 0.8) !important;
+  animation: pulseAlarm 1.2s infinite;
+}
+
+@keyframes pulseAlarm {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 16px rgba(239, 68, 68, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(239, 68, 68, 0.4); }
+}
+
+/* Pulse animation for active badges */
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  background-color: inherit;
+  opacity: 0.75;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0c15;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2540;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff7a00;
+}
+
+/* Modal animation */
+.modal-overlay {
+  transition: opacity 0.25s ease-out;
+}
+.modal-content {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+/* Drag and Drop styling */
+.doctor-row {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.doctor-row:hover {
+  border-color: rgba(255, 122, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.6);
+}
+.doctor-row.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+  border: 2px dashed #ff7a00;
+}
+.doctor-row.drag-over {
+  border-top: 3px solid #ff7a00 !important;
+  transform: translateY(4px);
+}
+
+/* Tab Active Styles */
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(255, 122, 0, 0.25), rgba(147, 51, 234, 0.25));
+  border-color: #ff7a00;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 122, 0, 0.3);
+}
+
+/* Sound button wave */
+.sound-active {
+  color: #ff7a00;
+}
